@@ -17,6 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "cart")
@@ -40,7 +42,7 @@ public class Cart {
 	@Column
 	@JsonProperty
 	private BigDecimal total;
-	
+
 	public BigDecimal getTotal() {
 		return total;
 	}
