@@ -2,8 +2,8 @@ package com.example.demo.controllers;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	final Logger logger = LoggerFactory.getLogger(UserController.class);
+	final Logger logger = LogManager.getLogger(UserController.class);
 
 	@GetMapping("/id/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
@@ -55,16 +55,16 @@ public class UserController {
 		cartRepository.save(cart);
 		user.setCart(cart);
 		if(createUserRequest.getPassword().length()<7){
-			logger.error("Password length must be at least 7 characters");
+			logger.error("CREATE_USER_REQ_ERROR: Password length must be at least 7 characters");
 			return ResponseEntity.badRequest().build();
 		} else if(!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
-			logger.error("Passwords don't match");
+			logger.error("CREATE_USER_REQ_ERROR: Passwords don't match");
 			return ResponseEntity.badRequest().build();
 		}
 
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 		userRepository.save(user);
-		logger.info("User with username {} successfully created", user.getUsername());
+		logger.info("CREATE_USER_REQ_SUCCESS:User with username {} successfully created", user.getUsername());
 		return ResponseEntity.ok(user);
 	}
 	

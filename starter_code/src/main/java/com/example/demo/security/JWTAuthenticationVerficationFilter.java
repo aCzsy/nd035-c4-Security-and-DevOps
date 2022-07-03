@@ -8,8 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +23,7 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 @Component
 public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilter {
 
-    final Logger logger = LoggerFactory.getLogger(JWTAuthenticationVerficationFilter.class);
+    final Logger logger = LogManager.getLogger(JWTAuthenticationVerficationFilter.class);
 
     public JWTAuthenticationVerficationFilter(AuthenticationManager authManager) {
         super(authManager);
@@ -35,7 +35,7 @@ public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilte
         String header = req.getHeader(SecurityConstants.HEADER_STRING);
 
         if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-            logger.warn("Authorization header is empty or token prefix is missing");
+            logger.warn("AUTHORIZATION_ERROR: Authorization header is empty or token prefix is missing");
             chain.doFilter(req, res);
             return;
         }
@@ -55,10 +55,10 @@ public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilte
             if (user != null) {
                 return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
             }
-            logger.error("Invalid credentials");
+            logger.error("AUTHORIZATION_ERROR: Invalid credentials");
             return null;
         }
-        logger.error("Authorization header is missing");
+        logger.error("AUTHORIZATION_ERROR: Authorization header is missing");
         return null;
     }
 

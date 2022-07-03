@@ -2,7 +2,8 @@ package com.example.demo.security;
 
 import java.util.Collections;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,13 +20,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+    final Logger logger = LogManager.getLogger(UserDetailsServiceImpl.class);
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            logger.error("User with username {} doesn't exist", username);
+            logger.error("AUTHENTICATION_ERROR: User with username {} doesn't exist", username);
             //throw new UsernameNotFoundException(username);
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.emptyList());
