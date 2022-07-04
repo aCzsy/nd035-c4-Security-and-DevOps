@@ -34,6 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthenticationVerficationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        //return 401 status
         http.exceptionHandling().
                 authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
@@ -46,6 +47,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //Removing below line allows to return 401 status on failed authentication
 //        auth.parentAuthenticationManager(authenticationManagerBean())
                 auth.userDetailsService(userDetailsService)
                 .passwordEncoder(bCryptPasswordEncoder);
