@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.UserRepository;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -27,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             logger.error("AUTHENTICATION_ERROR: User with username {} doesn't exist", username);
-            //throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(username);
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.emptyList());
     }
